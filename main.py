@@ -1,3 +1,4 @@
+from functools import lru_cache
 from typing import List
 
 import blosc
@@ -16,15 +17,22 @@ class Batch(BaseModel):  # Простейший класс, описывающи
     target: List[str]
 
 
+@lru_cache(
+    maxsize=25000)  # Взял не очень большое значение, чтобы не тратить избыточно памяти, думаю для самых популярных слов хватит
+def find_vector(word):
+    try:
+        return model[word]  # Преобразуем все слова в вектора, при этом отлавливая исключения (отсутствие слов)
+    except KeyError:
+        return None
+
+
 @app.post("/vectors")
 async def get_vectos_from_words(request: Batch):
     vectors = []
     for word in request.target:
-        try:
-            vec = model[word]  # Преобразуем все слова в вектора, при этом отлавливая исключения (отсутствие слов)
-            vectors.append(vec)  # Добавляем в общий список
-        except KeyError:
-            continue
+        current = find_vector(word)
+        if current is not None:
+            vectors.append(current)
     if len(vectors) == 0:
         return Response(content=b'', media_type="application/octet-stream",
                         headers={"compression": "none"})  # Не нашли никаких слов
