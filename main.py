@@ -27,7 +27,7 @@ def find_vector(word):
 
 
 @app.post("/vectors")
-async def get_vectos_from_words(request: Batch):
+async def get_vectors_from_words(request: Batch):
     vectors = []
     for word in request.target:
         current = find_vector(word)
