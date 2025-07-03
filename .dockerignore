@@ -1,0 +1,17 @@
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+.pytest_cache/
+venv/
+tests/
+client_example.py
+README.md
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.log
+.env
+.env.prod

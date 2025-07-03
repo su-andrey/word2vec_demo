@@ -1,6 +1,6 @@
 from functools import lru_cache
 from typing import List
-
+import os
 import blosc
 import numpy as np
 from fastapi import FastAPI, Response
@@ -8,8 +8,8 @@ from gensim.models import KeyedVectors
 from pydantic import BaseModel
 
 app = FastAPI()
-path = 'model/GoogleNews-vectors-negative300.bin.gz'
-model = KeyedVectors.load_word2vec_format(path, binary=True)
+PATH = os.getenv("PATH")
+model = KeyedVectors.load_word2vec_format(PATH, binary=True)
 MIN_COMPR_VAL = 10000  # Количество слов, которые можно обработать, начиная с которого применяем сжатие
 
 
